@@ -61,16 +61,18 @@ std::vector<std::string> bool_checker( std::vector<std::string> lines, bool valu
 
 
 void printlines(std::vector<std::string> contents) {
+    std::cout << "================================================================================" << std::endl;
     for (const std::string &field: contents) {
             std::cout << field << std::endl;
     }
+    std::cout << "================================================================================" << std::endl;
 }
 
 
 std::string random_select(std::vector<std::string> &list) {
     std::random_device seed;    //creates a random seed from random source
     std::mt19937 gen(seed());   //generates an instance of Mersenne Twister 19937 pseudorandom number generator with the seed
-    std::uniform_int_distribution<> dis(0, list.size()-1);  //generates a rand int between specified range in dis() aka distance. This line specifies the range. Initilization
+    std::uniform_int_distribution<> dis(1, list.size()-1);  //generates a rand int between specified range in dis() aka distance. This line specifies the range. Initilization
     int randomIndex = dis(gen);     //generates random int from distribution in dis and the generator gen; This combo only produces a random number from specified range
     return list[randomIndex];
 }
@@ -93,11 +95,35 @@ int main(int argc, char* argv[]) {
         list.push_back(line);
     }
     file.close();
-    std::vector<std::string> filtered_list;
-    filtered_list = bool_checker(list, false);
-    line = random_select(list);
-    std::cout << line << std::endl;
-    //printlines(filtered_list);
+    int user_choice;
+    while(user_choice != 4) {
+        std::cout << "\n What do you want to do with your file? \n" 
+                  << "1. list the whole file\n"
+                  << "2. Random Item \n"
+                  << "3. Filter \n"
+                  << "4. exit \n\n"
+                  << ">> ";
+        std::cin >> user_choice;
+        std::cout << "\n";
+
+        if (user_choice == 1) {
+            printlines(list);
+        }
+        else if (user_choice == 2) {
+            std::cout << "===========================================================================\n"
+                      << random_select(list)
+                      <<"\n============================================================================"
+                      << std::endl;
+        }
+        else if (user_choice == 3) {
+            std::vector<std::string> filtered_list = bool_checker(list, false);
+            printlines(filtered_list);
+        }
+        else{
+            std::cout << "not a valid option" << std::endl;
+        }
+        
+    }
 
     return 0;
 }
