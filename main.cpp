@@ -3,14 +3,12 @@
 NOTES TO SELF: Worth looking into randomization and number generators
 
 Draft Requirements: 
--User input and interface.
+- Make it easier to change filter
+- Add submenu case for Filter option
 - keep title bar even in filtered lists. 
 - formatting so that content remains in line with title bar. 
 - output only desired info. (can use split line for this)
- -user input for the file when ruunning the program (lets try the command line for now)
-    -eventually just try getting it possibly from the url 
  -user input for the type of randomization based off of the filters specified
-    - randomization is done. Now need to combine it with filtered list. 
 */
 
 
@@ -59,6 +57,19 @@ std::vector<std::string> bool_checker( std::vector<std::string> lines, bool valu
     return filteredline;
 }
 
+// looks for specific string given vector line by line and returns a new vector of those lines
+std::vector<std::string> filter_list(std::vector<std::string> lines, std::string target) {
+    std::vector<std::string> filtered_lines;
+    for (std::string line : lines) {
+        if (line.find(target) != std::string::npos) {
+            filtered_lines.push_back(line);
+        }else {
+            std::cout << "No lines that match that filter" << std::endl;
+        }
+    }
+    return filtered_lines;
+}
+
 
 void printlines(std::vector<std::string> contents) {
     std::cout << "================================================================================" << std::endl;
@@ -95,7 +106,7 @@ int main(int argc, char* argv[]) {
         list.push_back(line);
     }
     file.close();
-    int user_choice;
+    int user_choice = 0;
     while(user_choice != 4) {
         std::cout << "\n What do you want to do with your file? \n" 
                   << "1. list the whole file\n"
@@ -116,8 +127,39 @@ int main(int argc, char* argv[]) {
                       << std::endl;
         }
         else if (user_choice == 3) {
-            std::vector<std::string> filtered_list = bool_checker(list, false);
-            printlines(filtered_list);
+            std::string filter;
+            std::cout << "Type in filter to search by (Ex: True, False, etc.). Type in exit to leave this menu" << ">>";
+            std::cin >> filter;
+            while(filter != "Exit") {
+                std::vector<std::string> filtered_list = filter_list(list, filter);
+                std::cout << "What do you want to do with this filtered list:\n" 
+                          << "1. Print the list\n"
+                          << "2. Select a random item\n"
+                          << "3. Select a new filter from original list\n"
+                          << "4. Specify another filter for this list\n"
+                          << "5. Exit";
+                std::cin >> filter;
+
+                if (filter == "1") {
+                    printlines(filtered_list);
+                } else if (filter == "2") {
+                    std::cout << random_select(filtered_list) << std::endl;
+                } else if (filter == "3") {
+                    std::cout << "Type in new filter\n"<< ">>";
+                    std::cin >> filter;
+                    filtered_list = filter_list(list, filter);
+                }
+                else if (filter == "4") {
+                    std::cout << "Type in filter\n"<< ">>";
+                    std::cin >> filter;
+                    filtered_list = filter_list(filtered_list, filter);
+                }
+                else if (filter == "5") {
+                    filter = "Exit";
+                }
+            }
+            // std::vector<std::string> filtered_list = bool_checker(list, false);
+            // printlines(filtered_list);
         }
         else{
             std::cout << "not a valid option" << std::endl;
