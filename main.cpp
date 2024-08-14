@@ -63,20 +63,21 @@ std::vector<std::string> filter_list(std::vector<std::string> lines, std::string
     for (std::string line : lines) {
         if (line.find(target) != std::string::npos) {
             filtered_lines.push_back(line);
-        }else {
-            std::cout << "No lines that match that filter" << std::endl;
         }
+    }
+    if (filtered_lines.size() == 0) {
+        std::cout << "No lines match that filter" << std::endl;
     }
     return filtered_lines;
 }
 
 
 void printlines(std::vector<std::string> contents) {
-    std::cout << "================================================================================" << std::endl;
+    std::cout << "\n================================================================================" << std::endl;
     for (const std::string &field: contents) {
             std::cout << field << std::endl;
     }
-    std::cout << "================================================================================" << std::endl;
+    std::cout << "================================================================================\n" << std::endl;
 }
 
 
@@ -128,40 +129,51 @@ int main(int argc, char* argv[]) {
         }
         else if (user_choice == 3) {
             std::string filter;
-            std::cout << "Type in filter to search by (Ex: True, False, etc.). Type in exit to leave this menu" << ">>";
+            std::cout << "Type in filter to search by (Ex: True, False, etc.). Type in Exit to leave this menu\n" 
+                      << ">> ";
             std::cin >> filter;
+            std::vector<std::string> filtered_list = filter_list(list, filter);
+            std::string filter_option;
             while(filter != "Exit") {
-                std::vector<std::string> filtered_list = filter_list(list, filter);
                 std::cout << "What do you want to do with this filtered list:\n" 
                           << "1. Print the list\n"
                           << "2. Select a random item\n"
                           << "3. Select a new filter from original list\n"
                           << "4. Specify another filter for this list\n"
-                          << "5. Exit";
-                std::cin >> filter;
+                          << "5. Exit\n"
+                          << ">> ";
+                std::cin >> filter_option;
 
-                if (filter == "1") {
+                if (filter_option == "1") {
                     printlines(filtered_list);
-                } else if (filter == "2") {
-                    std::cout << random_select(filtered_list) << std::endl;
-                } else if (filter == "3") {
-                    std::cout << "Type in new filter\n"<< ">>";
+                } else if (filter_option == "2") {
+                    std::cout <<"\n ==========================================================\n"
+                              << random_select(filtered_list) 
+                              <<"\n ==========================================================\n" 
+                              << std::endl;
+                } else if (filter_option == "3") {
+                    std::cout << "Type in new filter\n"<< ">> ";
                     std::cin >> filter;
-                    filtered_list = filter_list(list, filter);
-                }
-                else if (filter == "4") {
+                    if (filter_list(list, filter).size() != 0 )
+                        filtered_list = filter_list(list, filter);
+                    }
+                  else if (filter_option == "4") {
                     std::cout << "Type in filter\n"<< ">>";
                     std::cin >> filter;
                     filtered_list = filter_list(filtered_list, filter);
                 }
-                else if (filter == "5") {
+                else if (filter_option == "5") {
                     filter = "Exit";
+                }
+                else if (user_choice <= 0 || user_choice > 5){
+                    std::cout << "not a valid option" << std::endl;
                 }
             }
             // std::vector<std::string> filtered_list = bool_checker(list, false);
             // printlines(filtered_list);
         }
-        else{
+        //should probably add a global variable fo number of options to not have to adjust this if i add more options 
+        else if (user_choice <= 0 || user_choice > 4){
             std::cout << "not a valid option" << std::endl;
         }
         
