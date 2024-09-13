@@ -4,7 +4,6 @@ NOTES TO SELF: Worth looking into randomization and number generators
 
 Draft Requirements: 
 - Make it easier to change filter
-- Add submenu case for Filter option
 - keep title bar even in filtered lists. 
 - formatting so that content remains in line with title bar. 
 - output only desired info. (can use split line for this)
